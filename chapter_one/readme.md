@@ -11,7 +11,7 @@
 ***
 
 ## 目录
-### 第一章 初始Opengl Es2.0
+### 第一章 初始OpenGL Es2.0
 * 1.1 OpenGL Es2.0概览
   * 1.1.1 OpenGL Es2.0 简介
   * 1.1.2 初始OpenGL Es2.0 应用程序
