@@ -1,17 +1,18 @@
-初识OpenGL Es 2.0
+初识OpenGL ES 2.0
 =======
 本章用来记录我学习的OpenGL Es 的第一章的知识点
 
 ***
 
+
 |Author|写代码的向日葵|
-|---|---
-|E-mail|1052105484@qq.com
+|---|---|
+|E-mail|1052105484@qq.com|
 
 ***
 
 ## 目录
-### 第一章 初识 OpenGL Es 2.0
+### 第一章 初识 OpenGL ES 2.0
 * 1.1 OpenGL Es2.0概览
   * 1.1.1 OpenGL Es2.0 简介
   * 1.1.2 初识OpenGL Es2.0 应用程序
@@ -22,11 +23,11 @@
   
 *****
     
-# 1.1 OpenGl Es 2.0概述
+# 1.1 OpenGl ES 2.0概述
 * 随着3G时代的到来，Andriod与iPhone逐渐成为消费者购买智能手机的主要选择。而由于基于Android的智能手机性能优良、价格合适，因此Android智能手机得到了大多数用户的青睐。
 * 随着Android系统版本及硬件水平的提升，OpenGL Es版本也由原先仅支持固定渲染管线的OpenGL Es 1.x 升级为支持自定义渲染管线的OpenGl Es2.0 。这使得使用OpenGL Es 2.0 渲染的3D场景更加真实，从而能够创造全新的用户体验。
         
-### 1.1.1 OpenGL Es 2.0简介
+### 1.1.1 OpenGL ES 2.0简介
 * 现今较为知名的3D图形API有OpenGL、DirectX以及OpenGL Es,他们各自的应用领域如下。
 
     1 . DirectX 主要应用于Windows下游戏的开发，再次领域基本上一统天下
@@ -43,11 +44,124 @@
     
 ***
 # 1.1.2 初识OPenGL ES 2.0 应用程序
-    
-    
+ * ShaderUtil.java
+ 
 ````java
-public class ShaderUtil{
-    public static int load
+import android.content.res.Resources;
+import android.opengl.GLES20;
+import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+
+/**
+ * Created by zhangqing on 2017/12/3.
+ */
+
+public final class ShaderUtil {
+    private static final String TAG = "ES20_ERROR";
+
+    /**
+     * 加载指定着色器的方法
+     * @param shaderType:着色器的类型
+     * @param source:着色器的脚本字符串
+     * @return
+     */
+    public static int loadShader(int shaderType,String source)
+    {
+        int shader=GLES20.glCreateShader(shaderType);//创建个shader，并且记录其id
+        if (shader!=0)//若创建成功，则加载着色器
+        {
+            GLES20.glShaderSource(shader,source);//加载着色器的源代码
+            GLES20.glCompileShader(shader);//编译
+            int[] compiled=new int[1];
+            //获取shader的编译情况
+            GLES20.glGetShaderiv(shader,GLES20.GL_COMPILE_STATUS,compiled,0);
+            if (compiled[0]==0)//如果编译失败则显示错误日志并且删除此shader
+            {
+                Log.e(TAG, "Could not compile shader "+shaderType+":");
+                Log.e(TAG, GLES20.glGetShaderInfoLog(shader));
+                GLES20.glDeleteShader(shader);
+                shader=0;
+            }
+        }
+        return shader;
+    }
+    public static  void checkGLError(String op)
+    {
+        int error;
+        while ((error= GLES20.glGetError())!=GLES20.GL_NO_ERROR)
+        {
+            Log.e(TAG, op+":glError"+error);
+            throw new RuntimeException(op+":glError"+error);
+        }
+    }
+    public static String loadFromAssetsFile(String fname, Resources resources)
+    {
+        String result=null;
+        try
+        {
+            InputStream inputStream=resources.getAssets().open(fname);
+            int ch=0;
+            ByteArrayOutputStream baos=new ByteArrayOutputStream();
+            while ((ch=inputStream.read())!=-1)
+            {
+                baos.write(ch);
+            }
+            byte[] buffer=baos.toByteArray();
+            baos.close();
+            inputStream.close();
+            result=new String(buffer,"UTF-8");
+            result=result.replaceAll("\\r\\n","\n");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 创建着色器程序的方法
+     * @param vertexSource
+     * @param fragmentSource
+     * @return
+     */
+    public static int createProgram(String vertexSource,String fragmentSource)
+    {
+        //加载顶点着色器
+        int vertexShader=loadShader(GLES20.GL_VERTEX_SHADER,vertexSource);
+        if (vertexShader==0)
+        {
+            return 0;
+        }
+        //加载片元着色器
+        int pixeShader=loadShader(GLES20.GL_FRAGMENT_SHADER,fragmentSource);
+        if (pixeShader==0)
+        {
+            return 0;
+        }
+        //创建程序
+        int program=GLES20.glCreateProgram();
+        if (program!=0)//若程序创建成功则向程序中加入顶点着色器与片元着色器
+        {
+            GLES20.glAttachShader(program,vertexShader);//向程序中加入顶点着色器
+            checkGLError("glAttachShader");
+            GLES20.glAttachShader(program,pixeShader);//向程序中加入片元着色器
+            checkGLError("glAttachShader");
+            GLES20.glLinkProgram(program);//链接程序
+            int[] linkStatus=new int[1];//存放链接成功program状态值的数组
+            GLES20.glGetProgramiv(program,GLES20.GL_LINK_STATUS,linkStatus,0);
+            if (linkStatus[0]!=GLES20.GL_TRUE)//若链接失败则报错并删除程序
+            {
+                Log.e(TAG, "Could not link program:");
+                Log.e(TAG, GLES20.glGetProgramInfoLog(program));
+                GLES20.glDeleteProgram(program);
+                program=0;
+            }
+       }
+       return program;
+    }
 }
 
     
