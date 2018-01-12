@@ -171,7 +171,10 @@ public final class ShaderUtil {
     }
 }
 
----
+
+***
+
+
 * Triangle.java
 ~~~~java
 
@@ -283,7 +286,9 @@ public class Triangle {
     }
 }
 
----
+
+***
+
 * MyTDView.java
 ~~~~java
 import android.content.Context;
@@ -361,7 +366,8 @@ public class MyTDView extends GLSurfaceView {
     }
 }
 
----
+***
+
 * MainActivity.java
 ~~~~java
 import android.os.Bundle;
