@@ -46,7 +46,7 @@
 # 1.1.2 初识OPenGL ES 2.0 应用程序
  * ShaderUtil.java
  
-````java
+```java
 import android.content.res.Resources;
 import android.opengl.GLES20;
 import android.util.Log;
@@ -170,13 +170,13 @@ public final class ShaderUtil {
         return program;
     }
 }
-
+```
 
 ***
 
 
 * Triangle.java
-~~~~java
+```java
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -285,12 +285,12 @@ public class Triangle {
         return mMVPMatrix;//返回总变换矩阵
     }
 }
-
+```
 
 ***
 
 * MyTDView.java
-~~~~java
+```java
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
@@ -365,11 +365,12 @@ public class MyTDView extends GLSurfaceView {
         }
     }
 }
+```
 
 ***
 
 * MainActivity.java
-~~~~java
+```java
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -401,3 +402,4 @@ public class MainActivity extends AppCompatActivity {
         mview.onPause();
     }
 }
+```
