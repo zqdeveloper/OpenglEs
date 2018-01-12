@@ -30,12 +30,8 @@
 ### 1.1.1 OpenGL ES 2.0简介
 * 现今较为知名的3D图形API有OpenGL、DirectX以及OpenGL Es,他们各自的应用领域如下。
 
-<<<<<<< HEAD
     1 . DirectX 主要应用于Windows下游戏的开发，在此领域基本上一统天下
-=======
-    1 . DirectX 主要应用于Windows下游戏的开发，在此领域基本上一统天下
->>>>>>> 075e252be14d250ecd4da43eb602bcf7a9509203
-   
+
     2 . OpenGL 的应用领域较为广泛，适用于Unix、Mac Os、Linux以及Microsoft等几乎所有的操作系统，可以开发游戏、工业建模以及嵌入式设备。
    
     3 . OpenGl Es 是专门针对于嵌入式设备而设计的，其实际是OpenGL 的裁剪版本，去除了OpenGL中许多不是必须存在的特性，如:GL_QUADS(四边形)与GL_POLYGONS(多边形)绘制模式以及glBegin（开始）glEnd(结束)操作等。
