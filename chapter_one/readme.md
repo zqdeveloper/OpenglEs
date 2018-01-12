@@ -171,4 +171,227 @@ public final class ShaderUtil {
     }
 }
 
-    
+---
+* Triangle.java
+~~~~java
+
+import android.content.Context;
+import android.content.res.Resources;
+import android.opengl.GLES20;
+import android.opengl.Matrix;
+
+import com.opengl.utils.ShaderUtil;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
+/**
+ * Created by zhangqing on 2017/12/6.
+ */
+
+public class Triangle {
+    public static float[] mProjMatrix = new float[16];//4x4投影矩阵
+    public static float[] mVMatrix = new float[16];//摄像机位置参数朝向矩阵
+    public static float[] mMVPMatrix;//总变换矩阵
+    int mProgram;//自定义渲染管线着色器程序id
+    int muMVPMatrixHandle;//总变换矩阵引用
+    int maPositionHandle;//顶点位置属性引用
+    int maColorHandle;//顶点颜色属性引用
+    String mVertexShader;//顶点着色器代码脚本
+    String mFragmentShader;//片元着色器代码脚本
+    static float[] mMMatrix = new float[16];//具体物体的3D变换矩阵，包括旋转，平移，缩放
+
+
+    FloatBuffer mVertexBuffer;//顶点坐标数据缓冲
+    FloatBuffer mColorBuffer;//顶点颜色数据缓冲
+    int vCount = 0;//顶点数量
+    public float xAngle = 0;//绕X轴旋转的角度
+
+    public Triangle(Context context)//构造器
+    {
+        initVertexData();//调用初始化顶点数据的initVertexData方法
+        initShader(context.getResources());//调用初始化着色器的initShader方法
+    }
+
+    public void initVertexData()//自定义的初始化顶点数据的方法
+    {
+        vCount = 3;                   //顶点数量为3
+        final float UNIT_SIZE = 0.5F;//设置单位长度
+        float vertices[] = new float[]{//设置顶点坐标数组
+
+                -4 * UNIT_SIZE, 0, 0,
+                0, -4 * UNIT_SIZE, 0,
+                4 * UNIT_SIZE, 0, 0
+        };
+        ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * 4);
+        vbb.order(ByteOrder.nativeOrder());//设置字节顺序为本地操作系统顺序
+        mVertexBuffer = vbb.asFloatBuffer();//转换为浮点(Float)型缓冲
+        mVertexBuffer.put(vertices);//在缓冲区中写入数据
+        mVertexBuffer.position(0);//设置缓冲区起始位置
+
+        float colors[] = new float[]{//顶点颜色数组
+
+                1, 1, 1, 0,
+                0, 0, 1, 0,
+                0, 1, 0, 0
+        };
+
+        ByteBuffer cbb = ByteBuffer.allocateDirect(colors.length * 4);
+        cbb.order(ByteOrder.nativeOrder());
+        mColorBuffer = cbb.asFloatBuffer();
+        mColorBuffer.put(colors);
+        mColorBuffer.position(0);
+    }
+
+    /**
+     * 创建并初始化着色器的方法
+     * @param resources
+     */
+    public void initShader(Resources resources) {
+        mVertexShader = ShaderUtil.loadFromAssetsFile("vertex.sh", resources);
+        mFragmentShader = ShaderUtil.loadFromAssetsFile("frag.sh", resources);
+        mProgram = ShaderUtil.createProgram(mVertexShader, mFragmentShader);
+        maPositionHandle = GLES20.glGetAttribLocation(mProgram, "aPosition");
+        maColorHandle = GLES20.glGetAttribLocation(mProgram, "aColor");
+        muMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
+    }
+
+    public void drawSelf() {
+        GLES20.glUseProgram(mProgram);
+        Matrix.setRotateM(mMMatrix, 0, 0, 0, 1, 0);//初始化变换矩阵
+        Matrix.translateM(mMMatrix, 0, 0, 0, -0.5f);//设置延Z轴负向平移
+        Matrix.rotateM(mMMatrix, 0, xAngle, 1, 0, 0);//设置绕X轴旋转
+        GLES20.glUniformMatrix4fv(muMVPMatrixHandle, 1, false, getFinalMatrix(mMMatrix), 0);
+        GLES20.glVertexAttribPointer(maPositionHandle, vCount, GLES20.GL_FLOAT, false, 3 * 4, mVertexBuffer);//将顶点位置数据传送进渲染管线
+        GLES20.glVertexAttribPointer(maColorHandle, 4, GLES20.GL_FLOAT, false, 4 * 4, mColorBuffer);//将顶点颜色数据传送进渲染管线
+        GLES20.glEnableVertexAttribArray(maPositionHandle);//启用顶点位置数据
+        GLES20.glEnableVertexAttribArray(maColorHandle);//启用顶点着色数据
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vCount);//执行绘制
+    }
+
+    /**
+     * 产生最终变换矩阵的方法
+     * @param spec
+     * @return
+     */
+    public static float[] getFinalMatrix(float[] spec) {
+        mMVPMatrix = new float[16];//初始化总变换矩阵
+        Matrix.multiplyMM(mMVPMatrix, 0, mVMatrix, 0, spec, 0);
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mMVPMatrix, 0);
+        return mMVPMatrix;//返回总变换矩阵
+    }
+}
+
+---
+* MyTDView.java
+~~~~java
+import android.content.Context;
+import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
+
+import com.example.opengl.shape.Triangle;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
+/**
+ * Created by zhangqing on 2017/12/6.
+ */
+
+public class MyTDView extends GLSurfaceView {
+    //每次三角形旋转的角度
+    final float ANGLE_SPAN = 0.5f;
+    RotateThread rthread;
+    SceneRenderer sceneRenderer;
+
+    public MyTDView(Context context) {
+        super(context);
+        this.setEGLContextClientVersion(2);
+        sceneRenderer = new SceneRenderer();
+        this.setRenderer(sceneRenderer);
+        this.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+    }
+
+    private class SceneRenderer implements GLSurfaceView.Renderer {
+
+        Triangle triangle;//声明STriangle类的引用
+
+        @Override
+        public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+            triangle = new Triangle(getContext());
+            GLES20.glClearColor(0, 0, 0, 1.0f);//设置屏幕背景色
+            GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+            rthread = new RotateThread();//创建RotateThread类的对象
+            rthread.start();//开启线程
+        }
+
+        @Override
+        public void onSurfaceChanged(GL10 gl, int width, int height) {
+            GLES20.glViewport(0, 0, width, height);//设置视口
+            float ratio = (float) width / height;//计算屏幕的宽度和高度比
+            Matrix.frustumM(Triangle.mProjMatrix, 0, -ratio, ratio, -1, 1, 1, 10);//设置透视投影
+            Matrix.setLookAtM(Triangle.mVMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);//设置摄像机
+
+        }
+
+        @Override
+        public void onDrawFrame(GL10 gl) {
+            GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+            triangle.drawSelf();
+        }
+    }
+
+    public class RotateThread extends Thread//自定义的内部类线程
+    {
+        public boolean flag = true;//设置循环标志位
+
+        @Override
+        public void run() {
+            while (flag) {
+                sceneRenderer.triangle.xAngle = sceneRenderer.triangle.xAngle + ANGLE_SPAN;
+                try {
+                    Thread.sleep(500);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+
+---
+* MainActivity.java
+~~~~java
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
+import com.example.opengl.view.MyTDView;
+
+public class MainActivity extends AppCompatActivity {
+
+
+    MyTDView mview;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mview = new MyTDView(this);
+        mview.requestFocus();//获取焦点
+        mview.setFocusableInTouchMode(true);//设置为可触控
+        setContentView(mview);//跳转到相关界面
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mview.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mview.onPause();
+    }
+}
