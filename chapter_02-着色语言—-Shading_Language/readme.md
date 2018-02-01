@@ -292,7 +292,7 @@ tempLL.grb=color.aab;//对向量tempLL的3个分量赋值
   + 关于向量与矩阵以及矩阵与矩阵的乘法都是执行的满足线性代数定义的运算。
   `向量可以看做是只有一行的特殊矩阵，所以也遵从矩阵与矩阵的乘法规律，公式如下:`
 
-  > 设A为  的矩阵，B为  的矩阵，那么称  的矩阵C为矩阵A与B的乘积，记作  ，其中矩阵C中的第 行第  列元素可以表示为：
+  > 设A为 m x p的矩阵，B为p x n  的矩阵，那么称 m x n的矩阵C为矩阵A与B的乘积，记作 C=AB ，其中矩阵C中的第 i行第 j 列元素可以表示为：
 
   ![](https://gss1.bdstatic.com/9vo3dSag_xI4khGkpoWK1HF6hhy/baike/s%3D334/sign=5e0cfe86de33c895a27e9e78e5137397/8ad4b31c8701a18bd6fe9b5e992f07082838fe8e.jpg)<br> 如下所示:<br>
 
