@@ -295,7 +295,8 @@ tempLL.grb=color.aab;//对向量tempLL的3个分量赋值
   > 设A为  的矩阵，B为  的矩阵，那么称  的矩阵C为矩阵A与B的乘积，记作  ，其中矩阵C中的第 行第  列元素可以表示为：
 
   ![](https://gss1.bdstatic.com/9vo3dSag_xI4khGkpoWK1HF6hhy/baike/s%3D334/sign=5e0cfe86de33c895a27e9e78e5137397/8ad4b31c8701a18bd6fe9b5e992f07082838fe8e.jpg)<br> 如下所示:<br>
-  ![矩阵乘法](https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/s%3D594/sign=01474d246759252da7171d0d009a032c/adaf2edda3cc7cd955ae9be73e01213fb80e9109.jpg)
+
+  ![](https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/s%3D594/sign=01474d246759252da7171d0d009a032c/adaf2edda3cc7cd955ae9be73e01213fb80e9109.jpg)
 
 ### 2.4 类型转换
 ### 2.5 限定符
