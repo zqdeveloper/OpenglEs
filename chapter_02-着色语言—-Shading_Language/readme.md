@@ -159,12 +159,12 @@ position[20]=vec3(6.0);//position需要一个大小为21的数组
 
 #### 2.1.7 空类型
 空类型使用void表示，仅用来声明不返回任何值的函数。例如在顶点着色器以及片元着色器中必须存在的main函数就是一个返回值为空类型的函数，代码如下所示.
-```C
-void main() {
+  ```C
+  void main() {
 
-//函数的具体操作省略...
-}
-```
+  //函数的具体操作省略...
+  }
+  ```
 
 ### 2.2 数据类型的基本使用
 前一小节介绍了OpenGL ES着色语言中的各个数据类型，掌握了这些数据类型的基本知识后，本节将简单地介绍这些数据类型的声明，初始化以及作用域.<br><br>
@@ -336,29 +336,6 @@ attribute vec3 aPosition;//声明一个用attribute修饰的vec3类型的向量
 varying vec4 aaColor;//声明一个用varying修饰的vec4类型的向量
 const int lightsCount=4;//声明一个用const 修饰的int类型的常量
 ```
-限定符在使用时应该放在变量之前,且使用attribute、uniform以及varying限定符修饰的变量必须为全局变量。同时要注意的是,着色语言中没有默认限定符的概念,因此如果有需要,必须为全局变量明确指定需要的限定符.
-
-#### 1.attribute限定符
-  attribute限定符顾名思义为属性限定符,其修饰的变量用来接受渲染管线传递进定点着色器的当前待处理的定点的各种属性值,这些属性值每个顶点各自拥有独立的副本,用于描述顶点的各项特征,如:顶点坐标,法向量,颜色,纹理坐标等.
-
-  且使用attribute限定符修饰的变量其值是有宿主程序批量传入渲染管线的,管线进行处理后再传递给顶点着色器。数据中有多少个顶点,管线就调用调用多少先顶点着色器,每次将一个顶点的各种属性数据传递给顶点着色器中对应的attribute变量,因此顶点着色器每次执行将完成对一个顶点各种属性数据的处理。
-
-  attribute限定符只能用于顶点着色器中,不能在片元着色器中使用,且attribute限定符只能用来修饰浮点数标量,浮点数向量以及矩阵变量,不能用来修饰其它类型的变量,下面的代码片段给出了在顶点着色器中正确使用attribue限定符的情况
-```C
-attribute vec3 aPosition;//顶点位置
-attribute vec3 aNormal;//顶点法向量
-```
-
-#### 2.uniform限定符
-#### 3.varying限定符
-#### 4.const限定符
-
-```C++
-uniform mat4 uMVPMatrix;//声明一个用uniform修饰的mat4类型的矩阵
-attribute vec3 aPosition;//声明一用attribute修饰的vec3类型的向量
-varying 策藏 aaColor;//声明一个用varying修饰的vec4类型的向量
-const int lightsCount=4;//声明一个用const修饰的int类型的常量
-```
 
 限定符在使用时应该放在变量类型之前，且使用attribute、uniform以及varying限定符修饰的变量必须为全局变量。同时要注意的是，着色语言中没有默认限定符的概念，因此如果有需要，必须为全局变量明确指定需要的限定符。
 1. attribute限定符
@@ -409,6 +386,24 @@ const int lightsCount=4;//声明一个用const修饰的int类型的常量
   //通过一致变量引用将一致变量值传入渲染管线
   GLES20.glUniformMattrix4fv(muMVPMatrixHandle,1,false,Triangle.getFinalMatrix(mMMatrix,0));
   ```
+  总结:将一致变量的值传送入渲染管线比较简单，主要包括两个步骤:
+
+    >1.获取着色器程序中一致变量的引用<br>
+    2.调用glUniformMatrix4fv方法将一致变量的值传送入渲染管线。
+
+      需要注意的是，随一致变量类型的不同将值传入渲染管线的方法也有所不同，这些方法的名称都以glUniform开头，常用的如下所列.
+
+      * glUniformNfvf方法，将N个浮点数传入管线，以备管线传递给由N个浮点数组成的一致变量，N的取值为1,2,3或者4
+      * glUnifromNi/glUniformNiv方法,将N个整数传入管线，以备管线传递给由N个整数组成的一致变量，N的取值为1,2,3或者4
+      * glUnifrommatrixNfv,将NXN的举证传入管线，以备管线传递给NxN举证类型的一致变量，N的取值为2,3或者4
+
+
+2. varying限定符
+
+    要想将顶点着色器中的信息传入到片元着色器中，则必须使用varying限定符。用varying限定符修饰的全局变量又称为易变变量，易变变量可以看成是顶点着色器以及片元着色器之间的动态接口，方便顶点着色器与片元着色器之间信息的传递.
+
+
+
 ### 2.6 流程控制
 ### 2.7 函数的声明与使用
 ### 2.8 片元着色器中的浮点变量精度的指定
