@@ -331,6 +331,62 @@ float f1=float(b);//将布尔类型值转变为浮点数，true转换为1.0,fals
 
 下面给出了使用上述4中限定符的代码片段
 
+```C++
+uniform mat4 uMVPMatrix;//声明一个用uniform修饰的mat4类型的矩阵
+attribute vec3 aPosition;//声明一用attribute修饰的vec3类型的向量
+varying 策藏 aaColor;//声明一个用varying修饰的vec4类型的向量
+const int lightsCount=4;//声明一个用const修饰的int类型的常量
+```
+
+限定符在使用时应该放在变量类型之前，且使用attribute、uniform以及varying限定符修饰的变量必须为全局变量。同时要注意的是，着色语言中没有默认限定符的概念，因此如果有需要，必须为全局变量明确指定需要的限定符。
+1. attribute限定符
+
+  attribute限定符顾名思义为属性限定符，其修饰的变量用来接收渲染管线传递进顶点着色器的当前待处理的顶点的各种属性值。这些属性值每个顶点各自拥有独立的副本，用于描述顶点的各项特征，如顶点坐标、法向量、颜色、纹理坐标等。
+
+  使用attribute限定符修饰的变量其值是由宿主程序(此处是Java程序)批量传入渲染管线的，管线进行基本处理后再传递给顶点着色器。数据中有多少个顶点，管线就调用多少次顶点着色器，每次将一个顶点的各种属性数据传递给顶点着色器中对应的attribute变量，因此，顶点着色器每次执行将完成对一个顶点各项属性数据的处理。
+
+  从上面的介绍中可以看出,attribute限定符只能用于顶点着色器中，不能在片元着色器中使用,且attribute限定符只能用来修饰浮点数标量、浮点数向量以及矩阵变量，不能用来修饰其它类型的变量，下面的代码片段给出了在顶点着色器中正确使用attribute限定符的情况.
+  ```C
+  attribute vec3 aPosition;//顶点位置
+  attribute vec3 aNormal;//顶点法向量
+  ```
+  对于用attribute限定符修饰的变量气质是由宿主程序批量传入渲染管线的，相关代码如下:
+  ```C++
+  int maPositionHandle;//声明顶点位置属性引用
+  maPositionHandle=GLES20.glGetAttribLocation(//获取顶点位置属性引用的值
+    mProgram,//采用的着色器程序的id
+    "aPosition",//着色器中对应的属性变量的名称
+  );
+  GLES20.glVertexAttribPointer(//将顶点位置数据传送进渲染管线
+      maPositionHandle,//顶点位置属性的引用
+      3,//每顶点一组的数据个数(这里是x,y,z坐标，因此为3)
+      GLes20.GL_FLOAT,//数据类型
+      false,//是否规格化
+      3*4,//魅族护具的尺寸，这里每组3个浮点值(x,y,z坐标，每个浮点数4个字节，共3*4=12个字节)
+      mVerexBuffer//存放了数据的缓冲
+    );
+    GLES20.glEnableVertexAttribArray(maPositionHandle);//启用顶点位置数据
+
+  ```
+
+2. uniform限定符
+
+  uniform为一致变量限定符，一致变量指的是对于同一组顶点组成的单个3D物体中所有顶点都相同的量。uniform变量可以用在顶点着色器或片元着色器中，其支持用来修饰所有的基本数据类型。与属性变量类似，一致变量的值也是从宿主程序传入的。
+  下面的代码片段给出了顶点或片元着色器中正确使用uniform限定符的情况.
+  ```c++
+  uniform mat4 uMVPMatrix;//总变换矩阵
+  uniforn mat4 uMMatrix;//变换矩阵
+  unifrom vec3 uLightLocation;//光源位置
+  uniform vec3 UCam儿啊;//摄像机位置
+  ```
+  将一致变量的值从宿主程序传入渲染管线的相关代码如下:
+  ```C++
+  int muMVPMatrixHandle;//总变换矩阵一致变量的引用
+  //获取着色器程序中总变换矩阵一致变量的引用
+  muMVPMatrixHandle=GLES20.glGetUniformLocation(mProgram,"uMVPMatrix");
+  //通过一致变量引用将一致变量值传入渲染管线
+  GLES20.glUniformMattrix4fv(muMVPMatrixHandle,1,false,Triangle.getFinalMatrix(mMMatrix,0));
+  ```
 ### 2.6 流程控制
 ### 2.7 函数的声明与使用
 ### 2.8 片元着色器中的浮点变量精度的指定
