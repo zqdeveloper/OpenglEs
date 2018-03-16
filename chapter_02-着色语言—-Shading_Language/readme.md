@@ -330,6 +330,28 @@ float f1=float(b);//将布尔类型值转变为浮点数，true转换为1.0,fals
 |const|用于声明常量|
 
 下面给出了使用上述4中限定符的代码片段
+```C
+uniform mat4 uMVPMatrix;//声明一个用uniform修饰的Mat4类型的矩阵
+attribute vec3 aPosition;//声明一个用attribute修饰的vec3类型的向量
+varying vec4 aaColor;//声明一个用varying修饰的vec4类型的向量
+const int lightsCount=4;//声明一个用const 修饰的int类型的常量
+```
+限定符在使用时应该放在变量之前,且使用attribute、uniform以及varying限定符修饰的变量必须为全局变量。同时要注意的是,着色语言中没有默认限定符的概念,因此如果有需要,必须为全局变量明确指定需要的限定符.
+
+#### 1.attribute限定符
+  attribute限定符顾名思义为属性限定符,其修饰的变量用来接受渲染管线传递进定点着色器的当前待处理的定点的各种属性值,这些属性值每个顶点各自拥有独立的副本,用于描述顶点的各项特征,如:顶点坐标,法向量,颜色,纹理坐标等.
+
+  且使用attribute限定符修饰的变量其值是有宿主程序批量传入渲染管线的,管线进行处理后再传递给顶点着色器。数据中有多少个顶点,管线就调用调用多少先顶点着色器,每次将一个顶点的各种属性数据传递给顶点着色器中对应的attribute变量,因此顶点着色器每次执行将完成对一个顶点各种属性数据的处理。
+
+  attribute限定符只能用于顶点着色器中,不能在片元着色器中使用,且attribute限定符只能用来修饰浮点数标量,浮点数向量以及矩阵变量,不能用来修饰其它类型的变量,下面的代码片段给出了在顶点着色器中正确使用attribue限定符的情况
+```C
+attribute vec3 aPosition;//顶点位置
+attribute vec3 aNormal;//顶点法向量
+```
+
+#### 2.uniform限定符
+#### 3.varying限定符
+#### 4.const限定符
 
 ```C++
 uniform mat4 uMVPMatrix;//声明一个用uniform修饰的mat4类型的矩阵
