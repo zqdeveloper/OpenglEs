@@ -393,9 +393,9 @@ const int lightsCount=4;//声明一个用const 修饰的int类型的常量
 
       需要注意的是，随一致变量类型的不同将值传入渲染管线的方法也有所不同，这些方法的名称都以glUniform开头，常用的如下所列.
 
-      * glUniformNfvf方法，将N个浮点数传入管线，以备管线传递给由N个浮点数组成的一致变量，N的取值为1,2,3或者4
-      * glUnifromNi/glUniformNiv方法,将N个整数传入管线，以备管线传递给由N个整数组成的一致变量，N的取值为1,2,3或者4
-      * glUnifrommatrixNfv,将NXN的举证传入管线，以备管线传递给NxN举证类型的一致变量，N的取值为2,3或者4
+       * glUniformNfvf方法，将N个浮点数传入管线，以备管线传递给由N个浮点数组成的一致变量，N的取值为1,2,3或者4
+       * glUnifromNi/glUniformNiv方法,将N个整数传入管线，以备管线传递给由N个整数组成的一致变量，N的取值为1,2,3或者4
+       * glUnifrommatrixNfv,将NXN的举证传入管线，以备管线传递给NxN举证类型的一致变量，N的取值为2,3或者4
 
 
 2. varying限定符
