@@ -595,20 +595,40 @@ void main()//主函数
       
 |内置函数签名|说明|
 |---|---|
-|genType radians(genType degrees)|此函数功能为角度转换为弧度，即返回值result=(π/180)*degrees,degrees参数表示需要转换的角度|
-|genType degrees(genType radians)|此函数功能为将弧度转化为角度，即返回值result=(180/π)*radians，radians参数表示需要转换的弧度|
-|genType sin(genType angle)|此函数为标准的正弦函数，其返回值范围是[-1,1],radians为正弦函数的参数，以弧度为单位|
-|genType cos(genType angle)|此函数为标准的余弦函数，其返回值范围是[-1,1],radians为余弦函数的参数，以弧度为单位|
-|genType tan(genType angle)|此函数为标准的正切函数，radians为正切函数的参数，以弧度为单位|
-|genType asin(genType x)|此函数为标准的反正弦函数参数，其返回值范围是[-π/2,π/2]<br>x为反正弦函数的参数，其取值范围是[-1,1]<br>如果x的绝对值大于1,那么结果不确定|
-|genType acos(genType x)|此函数为标准的反余弦函数参数，其返回值范围是[0,π]<br>x为反余弦函数的参数，其取值范围是[-1,1]<br>如果x的绝对值大于1,那么结果不确定|
-|genType atan(genType y,genType x)|此函数为标准的反正切函数，其返回值范围是[-π,π]<br>x与y为反正切函数的参数，而实际传入反正切函数的是y/x的值，其中通过x与y的符号用来确定所在的象限。如果x与y的值全为零，那么返回值不确定|
-|genType atan(genType y_over_x)|此函数为反正切函数，其返回值范围是[-π，π]<br>y_over_x为反正切函数的参数，不存在范围限制|
+|genType&nbsp;&nbsp;radians(genType&nbsp;&nbsp;degrees)|此函数功能为角度转换为弧度，即返回值result=(π/180)*degrees,degrees参数表示需要转换的角度|
+|genType&nbsp;&nbsp;degrees(genType&nbsp;&nbsp;radians)|此函数功能为将弧度转化为角度，即返回值result=(180/π)*radians，radians参数表示需要转换的弧度|
+|genType&nbsp;&nbsp;sin(genType&nbsp;&nbsp;angle)|此函数为标准的正弦函数，其返回值范围是[-1,1],radians为正弦函数的参数，以弧度为单位|
+|genType&nbsp;&nbsp;cos(genType&nbsp;&nbsp;angle)|此函数为标准的余弦函数，其返回值范围是[-1,1],radians为余弦函数的参数，以弧度为单位|
+|genType&nbsp;&nbsp;tan(genType&nbsp;&nbsp;angle)|此函数为标准的正切函数，radians为正切函数的参数，以弧度为单位|
+|genType&nbsp;&nbsp;asin(genType&nbsp;&nbsp;x)|此函数为标准的反正弦函数参数，其返回值范围是[-π/2,π/2]<br>x为反正弦函数的参数，其取值范围是[-1,1]<br>如果x的绝对值大于1,那么结果不确定|
+|genType&nbsp;&nbsp;acos(genType&nbsp;&nbsp;x)|此函数为标准的反余弦函数参数，其返回值范围是[0,π]<br>x为反余弦函数的参数，其取值范围是[-1,1]<br>如果x的绝对值大于1,那么结果不确定|
+|genType&nbsp;&nbsp;atan(genType&nbsp;&nbsp;y,genType&nbsp;&nbsp;x)|此函数为标准的反正切函数，其返回值范围是[-π,π]<br>x与y为反正切函数的参数，而实际传入反正切函数的是y/x的值，其中通过x与y的符号用来确定所在的象限。如果x与y的值全为零，那么返回值不确定|
+|genType&nbsp;&nbsp;atan(genType&nbsp;&nbsp;y_over_x)|此函数为反正切函数，其返回值范围是[-π，π]<br>y_over_x为反正切函数的参数，不存在范围限制|
 
 <B>genType代表的数据类型有float、vec2、vec3以及vec4。其中float指的是浮点数标量,vec2指的是二维的浮点数向量，vec3指的是三维的浮点数向量，vec4指的是四维的浮点数向量<B>
 
 ### 4.2 指数函数
+指数函数同时适用于顶点着色器与片元着色器
+|内置函数签名|说明|
+|-|-|
+|genType&nbsp;&nbsp;pow(genType&nbsp;&nbsp;x,genType&nbsp;&nbsp;y)|此函数返回x的y次方,如果x的值小于0，那么返回值不确定，如果x的值等于，并且y的值小于等于0，那么返回值不确定|
+|genType&nbsp;&nbsp;exp(genType&nbsp;&nbsp;x)|此函数返回e的x次方|
+|gebType&nbsp;&nbsp;log(genType&nbsp;&nbsp;x)|此函数返回以e为底的x的对数|
+|genType&nbsp;&nbsp;exp2(genType&nbsp;&nbsp;x)|此函数返回2的x次方|
+|genType&nbsp;&nbsp;log2(genType&nbsp;&nbsp;x)|此函数返回以2为底的x的对数|
+|genType&nbsp;&nbsp;sqrt(genType&nbsp;&nbsp;x)|此函数返回x的平方根|
+|genType&nbsp;&nbsp;inversesqrt(genType&nbsp;&nbsp;x)|此函数返回x的正平方根的倒数|
+
 ### 4.3 常见函数
+|内置函数签名|说明|
+|-|-|
+|genType&nbsp;&nbsp;abs(genType&nbsp;&nbsp;x)|此函数的功能为求绝对值|
+|genType&nbsp;&nbsp;sign(genType&nbsp;&nbsp;x)|此函数的功能是0进行比较，进而返回相应的值，如果x的值等于0，则返回1.0；如果x=0,则返回0，如果x<0,则返回-1.0|
+|genType&nbsp;&nbsp;floor(genType&nbsp;&nbsp;x)|此函数功能为返回小于或者等于x的最大整数值|
+|genType&nbsp;&nbsp;ceil(genType&nbsp;&nbsp;x)|此函数的功能为返回大于或者等于x的最小整数值|
+|genType&nbsp;&nbsp;fract(genType&nbsp;&nbsp;x)|此函数功能为返回x-floor(x)的值|
+|genType&nbsp;&nbsp;mod(genType&nbsp;&nbsp;x,float&nbsp;&nbsp;float&nbsp;&nbsp;y)|此函数的功能是进行取模运算，相当于x-y*floor(x/y)|
+|genType&nbsp;&nbsp;mod(genType&nbsp;&nbsp;x,genType&nbsp;&nbsp;y)|此函数的功能是进行取模运算，最后返回x-y*floor(x/y)|
 ### 4.4 几何函数
 ### 4.5 矩阵函数
 ### 4.6 向量关系函数
